@@ -10,7 +10,7 @@ const p = path.join(
   "products.json"
 );
 
-// ! HELPER FUNCTION
+// ? HELPER FUNCTION
 const getProductsFromFile = (cb) => {
   fs.readFile(p, (err, fileContent) => {
     if (err) {
@@ -20,20 +20,20 @@ const getProductsFromFile = (cb) => {
   });
   return products;
 };
-
-// ! CLASS
+// ? CLASS
 module.exports = class Product {
   constructor(t) {
     this.title = t;
   }
 
   save() {
-    getProductsFromFile((product) => {
-      products.push(this);
-      fs.writeFile(p, JSON.stringify(product), (err) => {
-        console.log(err);
+    getProductsFromFile(
+      (product) => {
+        products.push(this);
+        fs.writeFile(p, JSON.stringify(product), (err) => {
+          console.log(err);
+        });
       });
-    });
   }
 
   static fetchAll(cb) {
