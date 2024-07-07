@@ -12,7 +12,7 @@ const getProductsFromFile = cb => {
     if (err) {
       cb([]);
     } else {
-      console.log(JSON.parse(fileContent), "This is the parsed stuff 🔥🔥🔥🔥");
+      // console.log(JSON.parse(fileContent), "This is the parsed stuff 🔥🔥🔥🔥");
       cb(JSON.parse(fileContent));
     }
   });
@@ -48,4 +48,3 @@ module.exports = class Product {
   }
 
 };
-
