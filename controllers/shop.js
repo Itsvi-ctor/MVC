@@ -12,7 +12,6 @@ exports.getProducts = (req, res, next) => {
   });
 };
 
-
 exports.getSingleProduct = (req, res, next) => {
   const prodId = req.params.productId
   Products.findById(prodId, product => {
@@ -51,7 +50,6 @@ exports.getOrders = (req, res, next) => {
     pageTitle: "My Orders"
   })
 }
-
 
 exports.checkout = (req, res, next) => {
   res.render("shop/checkout", {
