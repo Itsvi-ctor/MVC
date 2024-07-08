@@ -20,7 +20,7 @@ exports.postAddProduct = (req, res, next) => {
 
 exports.postEditProducts = (req, res, next) => {
     const product = req.body.productId
-    const updatedProduct = new Products(product.id, product.title, product.imageUrl, product.description, product)
+    const updatedProduct = new Products(product, req.body.title, req.body.imageUrl, req.body.description)
     updatedProduct.save()
 }
 
