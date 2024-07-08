@@ -20,8 +20,9 @@ exports.postAddProduct = (req, res, next) => {
 
 exports.postEditProducts = (req, res, next) => {
     const product = req.body.productId
-    const updatedProduct = new Products(product, req.body.title, req.body.imageUrl, req.body.description)
+    const updatedProduct = new Products(product, req.body.title, req.body.imageUrl, req.body.description, req.body.price)
     updatedProduct.save()
+    res.redirect("/admin/products")
 }
 
 exports.editProduct = (req, res, next) => {
