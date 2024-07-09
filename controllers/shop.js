@@ -37,7 +37,11 @@ exports.getIndex = (req, res, next) => {
   });
 }
 
-exports.getCart = (req, res, next) => {
+exports.getCarts = (req, res, next) => {
+  // res.render("shop/cart", {
+  //   path: "/carts",
+  //   pageTitle: "My Cart"
+  // })
   Cart.getCart(cart => {
     Products.fetchAll(products => {
       const cartProducts = []
@@ -54,7 +58,6 @@ exports.getCart = (req, res, next) => {
       })
     })
   })
-
 }
 
 exports.getOrders = (req, res, next) => {
