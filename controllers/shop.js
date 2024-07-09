@@ -1,9 +1,9 @@
 const { redirect } = require("express/lib/response");
-const Products = require("../models/product");
+const Product = require("../models/product");
 const Cart = require("../models/cart")
 
 exports.getProducts = (req, res, next) => {
-  Products.fetchAll((products) => {
+  Product.fetchAll((products) => {
     res.render("shop/product-list", {
       prods: products,
       pageTitle: "All Products",
@@ -14,21 +14,21 @@ exports.getProducts = (req, res, next) => {
 
 exports.getSingleProduct = (req, res, next) => {
   const prodId = req.params.productId
-  Products.findById(prodId, product => {
+  Product.findById(prodId, product => {
     res.render("shop/product-detail", { path: "/products", product: product, pageTitle: product.title })
   })
 }
 
 exports.postSingleItemToCart = (req, res, next) => {
   const prodId = req.body.productId
-  Products.findById(prodId, product => {
+  Product.findById(prodId, product => {
     Cart.addSingleProductToCart(prodId, product.price)
   })
   res.redirect("/")
 }
 
 exports.getIndex = (req, res, next) => {
-  Products.fetchAll((products) => {
+  Product.fetchAll((products) => {
     res.render("shop/index", {
       prods: products,
       pageTitle: "Shop",
@@ -37,28 +37,26 @@ exports.getIndex = (req, res, next) => {
   });
 }
 
-exports.getCarts = (req, res, next) => {
-  // res.render("shop/cart", {
-  //   path: "/carts",
-  //   pageTitle: "My Cart"
-  // })
+exports.getCart = (req, res, next) => {
   Cart.getCart(cart => {
-    Products.fetchAll(products => {
-      const cartProducts = []
-      for (products of products) {
-        const cartProductData = cart.products.find(prod => prod.id === products.id)
+    Product.fetchAll(products => {
+      const cartProducts = [];
+      for (product of products) {
+        const cartProductData = cart.products.find(
+          prod => prod.id === product.id
+        );
         if (cartProductData) {
-          cartProducts.push({ productData: products, qty: cartProductData.qty })
+          cartProducts.push({ productData: product, qty: cartProductData.qty });
         }
       }
-      res.render("shop/cart", {
-        path: "/cart",
-        pageTitle: "Your Cart",
+      res.render('shop/cart', {
+        path: '/cart',
+        pageTitle: 'Your Cart',
         products: cartProducts
-      })
-    })
-  })
-}
+      });
+    });
+  });
+};
 
 exports.getOrders = (req, res, next) => {
   res.render("shop/orders", {

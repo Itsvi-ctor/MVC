@@ -59,13 +59,14 @@ module.exports = class Cart {
 
 
     static getCart(cb) {
-        fs.readFile(p, (err, filecontent) => {
+        fs.readFile(p, (err, fileContent) => {
+            const cart = JSON.parse(fileContent);
             if (err) {
-                return cb(null)
+                cb(null);
             } else {
-                const cart = JSON.parse(filecontent)
+                cb(cart);
             }
-        })
+        });
     }
 
 }
