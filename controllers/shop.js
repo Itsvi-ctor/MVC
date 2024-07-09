@@ -38,10 +38,23 @@ exports.getIndex = (req, res, next) => {
 }
 
 exports.getCart = (req, res, next) => {
-  res.render("shop/cart", {
-    path: "/cart",
-    pageTitle: "Your Cart"
+  Cart.getCart(cart => {
+    Products.fetchAll(products => {
+      const cartProducts = []
+      for (products of products) {
+        const cartProductData = cart.products.find(prod => prod.id === products.id)
+        if (cartProductData) {
+          cartProducts.push({ productData: products, qty: cartProductData.qty })
+        }
+      }
+      res.render("shop/cart", {
+        path: "/cart",
+        pageTitle: "Your Cart",
+        products: cartProducts
+      })
+    })
   })
+
 }
 
 exports.getOrders = (req, res, next) => {

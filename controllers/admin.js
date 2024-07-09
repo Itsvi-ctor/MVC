@@ -9,7 +9,7 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-    title = req.body.title 
+    title = req.body.title
     price = req.body.price
     description = req.body.description
     imageUrl = req.body.imageUrl
@@ -49,4 +49,10 @@ exports.getProducts = (req, res, next) => {
             editing: true
         });
     });
+}
+
+exports.deleteProduct = (req, res, next) => {
+    const prodId = req.body.productId
+    Products.deleteById(prodId)
+    res.redirect("/admin/products")
 }
