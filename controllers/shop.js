@@ -3,19 +3,24 @@ const Product = require("../models/product");
 const Cart = require("../models/cart")
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
+  Product.fetchAll().then(([rows, fieldData]) => {
     res.render("shop/product-list", {
-      prods: products,
+      prods: rows,
       pageTitle: "All Products",
       path: "/products",
     });
-  });
+  }).catch((err) => {
+    console.log(err, "error from getProducts in shop controller");
+  })
+
 };
 
 exports.getSingleProduct = (req, res, next) => {
   const prodId = req.params.productId
-  Product.findById(prodId, product => {
-    res.render("shop/product-detail", { path: "/products", product: product, pageTitle: product.title })
+  Product.findById(prodId).then(([product]) => {
+    res.render("shop/product-detail", { path: "/products", product: product[0], pageTitle: product[0].title })
+  }).catch((err) => {
+    console.log(err, "err coming from getSingleProduct in shop controller")
   })
 }
 
@@ -28,13 +33,16 @@ exports.postSingleItemToCart = (req, res, next) => {
 }
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll((products) => {
+  Product.fetchAll().then(([rows, fieldData]) => {
     res.render("shop/index", {
-      prods: products,
+      prods: rows,
       pageTitle: "Shop",
       path: "/",
     });
-  });
+  }).catch((err) => {
+    console.log(err, "this error is from getIndex in shop.js controller");
+  })
+
 }
 
 exports.getCart = (req, res, next) => {
@@ -58,9 +66,9 @@ exports.getCart = (req, res, next) => {
   });
 };
 
-exports.postCartDeleteProduct = (req, res, next)=>{
+exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId
-  Product.findById(prodId, product =>{
+  Product.findById(prodId, product => {
     Cart.deleteProduct(prodId, product.price)
     res.redirect("/cart")
   })

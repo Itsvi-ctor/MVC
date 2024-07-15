@@ -14,11 +14,11 @@ exports.postAddProduct = (req, res, next) => {
     description = req.body.description
     imageUrl = req.body.imageUrl
     const product = new Products(null, title, imageUrl, description, price);
-    product.save();
+    product.save().then(() => { res.redirect("/") }).catch((err) => { console.log(err, "err from postAddProduct in admin.js controller"); })
     res.redirect("/");
 };
 
-exports.postEditProducts = (req, res, next) => {
+exports.postEditProducts = (req, res, next) => { 
     const product = req.body.productId
     const updatedProduct = new Products(product, req.body.title, req.body.imageUrl, req.body.description, req.body.price)
     updatedProduct.save()

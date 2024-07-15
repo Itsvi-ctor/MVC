@@ -13,14 +13,6 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-db.execute("SELECT * FROM products")
-    .then((result) => {
-        console.log(result[0]);
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
