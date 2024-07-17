@@ -1,3 +1,15 @@
+// ! Using sequelize
+const Sequelize = require("sequelize");
+
+const sequelize = new Sequelize("node-complete", "root", "Rijjt51mm@", {
+  dialect: "mysql",
+  host: "localhosts",
+});
+
+module.exports = sequelize
+
+// ! MySQL code
+/* 
 const mysql = require("mysql2")
 
 const pool = mysql.createPool({
@@ -8,3 +20,4 @@ const pool = mysql.createPool({
 })
 
 module.exports = pool.promise()
+*/
