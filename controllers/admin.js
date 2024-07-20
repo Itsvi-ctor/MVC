@@ -15,14 +15,20 @@ exports.postAddProduct = (req, res, next) => {
   imageUrl = req.body.imageUrl;
 
   // ! Using Sequelize
-  Product.create({
-    title, price, description, imageUrl
-  }).then(() => {
-    console.log("CREATED PRODUCT 🔥🔥🔥🔥");
-    res.redirect("/")
-  }).catch(err => {
-    console.log(err);
-  })
+  req.user
+    .createProduct({
+      title,
+      price,
+      description,
+      imageUrl,
+    })
+    .then(() => {
+      console.log("CREATED PRODUCT 🔥🔥🔥🔥");
+      res.redirect("/");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
   // ! Using SQL
   // const product = new Products(null, title, imageUrl, description, price);
@@ -41,31 +47,37 @@ exports.editProduct = (req, res, next) => {
   const editMode = req.query.edit;
   if (!editMode) return res.redirect("/");
   const prodId = req.params.productId;
-  Product.findByPk(prodId).then((product) => {
-    if (!product) return res.redirect("/");
-    res.render("admin/edit-product", {
-      pageTitle: "Edit Product",
-      path: "/admin/edit-product",
-      edit: true,
-      product: product,
+  req.user
+    .getProducts({ where: { id: prodId } })
+    .then((products) => {
+      const product = products[0]
+      if (!product) return res.redirect("/");
+      res.render("admin/edit-product", {
+        pageTitle: "Edit Product",
+        path: "/admin/edit-product",
+        edit: true,
+        product: product,
+      });
     })
-  }).catch(err => console.log(err))
+    .catch((err) => console.log(err));
 };
 
 exports.postEditProducts = (req, res, next) => {
   const productId = req.body.productId;
   // ! Using Sequelize
-  Product.findByPk(productId).then((product) => {
-    product.title = req.body.title,
-      product.price = req.body.price,
-      product.description = req.body.description,
-      product.imageUrl = req.body.imageUrl
-    return product.save()
-  }).then(result => {
-    res.redirect("/admin/products");
-    console.log("UPDATED PRODUCT 🔥🔥🔥🔥");
-  }).catch(err => console.log(err))
-
+  Product.findByPk(productId)
+    .then((product) => {
+      (product.title = req.body.title),
+        (product.price = req.body.price),
+        (product.description = req.body.description),
+        (product.imageUrl = req.body.imageUrl);
+      return product.save();
+    })
+    .then((result) => {
+      res.redirect("/admin/products");
+      console.log("UPDATED PRODUCT 🔥🔥🔥🔥");
+    })
+    .catch((err) => console.log(err));
 
   // ! Using SQL
 
@@ -82,28 +94,32 @@ exports.postEditProducts = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll().then((products) => {
-    res.render("admin/products", {
-      prods: products,
-      pageTitle: "All Products",
-      path: "admin/products",
-      editing: true,
-    });
-  }).catch(err => console.log(err));
+  req.user.getProducts()
+    .then((products) => {
+      res.render("admin/products", {
+        prods: products,
+        pageTitle: "All Products",
+        path: "admin/products",
+        editing: true,
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.deleteProduct = (req, res, next) => {
-  
   // ! Using Sequelize
   const prodId = req.body.productId;
-  Product.findByPk(prodId).then((product) => {
-    return product.destroy()
-  }).then(() => {
-    console.log("PRODUCT DELETED")
-    res.redirect("/admin/products")
-  }).catch(err => console.log(err))
+  Product.findByPk(prodId)
+    .then((product) => {
+      return product.destroy();
+    })
+    .then(() => {
+      console.log("PRODUCT DELETED");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log(err));
 
-  // ! Using SQL 
+  // ! Using SQL
   // const prodId = req.body.productId;
   // Product.deleteById(prodId);
   // res.redirect("/admin/products");
