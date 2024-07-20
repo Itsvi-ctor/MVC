@@ -3,22 +3,35 @@ const Product = require("../models/product");
 const Cart = require("../models/cart")
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll().then(([rows, fieldData]) => {
+  // ! Using Sequelize 
+  Product.findAll().then((product) => {
     res.render("shop/product-list", {
-      prods: rows,
+      prods: product,
       pageTitle: "All Products",
       path: "/products",
-    });
+    })
   }).catch((err) => {
     console.log(err, "error from getProducts in shop controller");
   })
+
+  // ! Using SQL
+  // Product.fetchAll().then(([rows, fieldData]) => {
+  //   res.render("shop/product-list", {
+  //     prods: rows,
+  //     pageTitle: "All Products",
+  //     path: "/products",
+  //   });
+  // }).catch((err) => {
+  //   console.log(err, "error from getProducts in shop controller");
+  // })
 
 };
 
 exports.getSingleProduct = (req, res, next) => {
   const prodId = req.params.productId
-  Product.findById(prodId).then(([product]) => {
-    res.render("shop/product-detail", { path: "/products", product: product[0], pageTitle: product[0].title })
+  Product.findByPk(prodId).then((product) => {
+    console.log(product, "this is from getSingleProduct 🔥🔥🔥🔥");
+    res.render("shop/product-detail", { path: "/products", product: product, pageTitle: product.title })
   }).catch((err) => {
     console.log(err, "err coming from getSingleProduct in shop controller")
   })
@@ -33,15 +46,28 @@ exports.postSingleItemToCart = (req, res, next) => {
 }
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll().then(([rows, fieldData]) => {
+
+  // ! Using Sequelize 
+  Product.findAll().then((products) => {
     res.render("shop/index", {
-      prods: rows,
+      prods: products,
       pageTitle: "Shop",
       path: "/",
     });
-  }).catch((err) => {
-    console.log(err, "this error is from getIndex in shop.js controller");
+  }).catch(err => {
+    console.log(err);
   })
+
+  // ! Using SQL
+  // Product.fetchAll().then(([rows, fieldData]) => {
+  //   res.render("shop/index", {
+  //     prods: rows,
+  //     pageTitle: "Shop",
+  //     path: "/",
+  //   });
+  // }).catch((err) => {
+  //   console.log(err, "this error is from getIndex in shop.js controller");
+  // })
 
 }
 

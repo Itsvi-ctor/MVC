@@ -1,12 +1,15 @@
 const path = require("path");
-
 const express = require("express");
 const bodyParser = require("body-parser");
-
 const errorController = require("./controllers/error");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
-const db = require("./util/database");
+const sequelize = require("./util/database");
+
+// Models
+const User = require("./models/user")
+const Product = require("./models/product")
+
 
 const app = express();
 
@@ -21,4 +24,16 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-app.listen(3000);
+// ! Model definition
+// User created this product
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+// User has many products
+User.hasMany(Product)
+
+
+sequelize.sync().then((result) => {
+    app.listen(3000);
+}).catch(err => {
+    console.log(err);
+})
+
