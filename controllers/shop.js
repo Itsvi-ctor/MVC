@@ -133,11 +133,23 @@ exports.getCart = (req, res, next) => {
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
-  const prodId = req.body.productId
-  Product.findById(prodId, product => {
-    Cart.deleteProduct(prodId, product.price)
-    res.redirect("/cart")
-  })
+  const prodId = req.body.productId;
+  console.log(prodId, "I am product ID 🔥🔥🔥🔥🔥");
+  req.user
+    .getCart()
+    .then(cart => {
+      console.log(cart, "this is cart from deleted products 🔥🔥🔥🔥🔥");
+      return cart.getProducts({ where: { id: prodId } });
+    })
+    .then(products => {
+      console.log(products, "products, what it is ❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥");
+      const product = products[0];
+      return product.cartItem.destroy();
+    })
+    .then(result => {
+      res.redirect('/cart');
+    })
+    .catch(err => console.log(err));
 }
 
 exports.getOrders = (req, res, next) => {
