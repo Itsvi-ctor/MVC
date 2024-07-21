@@ -132,6 +132,12 @@ exports.getCart = (req, res, next) => {
   // });
 };
 
+exports.postOrder = (req, res, next) => {
+  req.user.getCart().then((cart) => {
+    return cart.getProducts().then((products) => { })
+  }).catch(err => console.log(err))
+}
+
 exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
   console.log(prodId, "I am product ID 🔥🔥🔥🔥🔥");
