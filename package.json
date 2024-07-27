@@ -8,7 +8,7 @@
     "start": "nodemon app_mongodb.js",
     "start-server": "node app_mongodb.js"
   },
-  "author": "Maximilian Schwarzmüller",
+  "author": "Folajimi Olaniyan",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^1.18.3"
